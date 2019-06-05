@@ -161,7 +161,6 @@ composer.phar
 # Embedded web-server pid file
 /.web-server-pid
 
-.gitignore
 .idea/workspace.xml
 composer.lock
 vendor/autoload.php
