@@ -40,14 +40,6 @@ class Iucn extends AbstractClass
         }
     }
 
-    private function getSpecies ()
-    {
-        if (empty($this->species)) {
-            $this->species = $this->getTaxonNames(false);
-        }
-        return $this->species;
-    }
-
     private function insertData ($row)
     {
         if (empty($row->result)) {

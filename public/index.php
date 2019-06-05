@@ -18,7 +18,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //$import->import();
 
 $import = new Iucn();
-$import->import();
+print_r($import->getSpeciesNames());
+//$import->import();
 
 //$import = new Natuurwijzer();
 //$import->import();

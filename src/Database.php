@@ -76,13 +76,16 @@ class Database
         while ($row = $stmt->fetch()) {
             $data[$row['source']][] = $row['scientific_name'];
         }
-        $query = "select taxon from natuurwijzer";
-        $stmt = $this->pdo->query($query);
+
+        $stmt = $this->pdo->query("select taxon from natuurwijzer");
         $natuurwijzer = [];
         while ($row = $stmt->fetch()) {
-            $natuurwijzer = array_merge($natuurwijzer, json_decode($row->taxon, true));
+            if (!empty($row['taxon'])) {
+                 $natuurwijzer = array_merge($natuurwijzer, (array)json_decode($row['taxon'], true));
+            }
         }
-        $data['natuurwijzer'] = $natuurwijzer;
+        natcasesort($natuurwijzer);
+        $data['natuurwijzer'] = array_unique($natuurwijzer);
         return isset($data) ? $data : [];
 }
 

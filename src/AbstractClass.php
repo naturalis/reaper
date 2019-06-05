@@ -53,9 +53,9 @@ class AbstractClass
         return str_replace($domReplaceHelper['tmp'], $domReplaceHelper['orig'], $str);
     }
 
-    protected function getSpeciesNames ($bySource = true)
+    public function getTaxonNames ($bySource = true)
     {
-        $data = $this->pdo->getSpeciesNames();
+        $data = $this->pdo->getTaxonNames();
         if (isset($data) && !$bySource) {
             $flat = [];
             foreach (array_keys($data) as $source) {
@@ -65,5 +65,19 @@ class AbstractClass
         }
         return isset($flat) ? $flat : (isset($data) ? $data : []);
     }
+
+    public function getSpeciesNames ()
+    {
+        foreach ($this->getTaxonNames(false) as $taxon) {
+            $tmp = explode(' ', $taxon);
+            if (count($tmp) >= 2) {
+                $species[] = $tmp[0] . ' ' . $tmp[1];
+            }
+        }
+        natcasesort($species);
+        return array_unique($species);
+    }
+
+
 
 }
