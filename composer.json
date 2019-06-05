@@ -1,0 +1,9 @@
+{
+  "autoload": {
+    "psr-4": {"Reaper\\": "src/"}
+  },
+  "require": {
+    "curl/curl": "^2.0",
+    "voku/simple_html_dom": "*"
+  }
+}
