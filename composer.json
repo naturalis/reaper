@@ -3,6 +3,8 @@
     "psr-4": {"Reaper\\": "src/"}
   },
   "require": {
+    "ext-pdo": "*",
+    "ext-json": "*",
     "curl/curl": "^2.0",
     "voku/simple_html_dom": "*"
   }

@@ -8,8 +8,8 @@ use Reaper\Natuurwijzer as Natuurwijzer;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-//$import = new Tentoonstelling();
-//$import->import();
+$import = new Tentoonstelling();
+$import->import();
 
 //$import = new Topstukken();
 //$import->import();
@@ -17,9 +17,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //$import = new Ttik();
 //$import->import();
 
-$import = new Iucn();
-print_r($import->getSpeciesNames());
+//$import = new Iucn();
 //$import->import();
 
 //$import = new Natuurwijzer();
 //$import->import();
+

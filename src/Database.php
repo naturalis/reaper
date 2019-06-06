@@ -19,13 +19,14 @@ class Database
         $this->config = new Config();
         $this->config->setEnvs();
 
-        $this->host = $this->config->getEnv('REAPER_DB_HOST');
-        $this->user = $this->config->getEnv('REAPER_DB_USERNAME');
-        $this->password = $this->config->getEnv('REAPER_DB_PASSWORD');
-        $this->database = $this->config->getEnv('REAPER_DB_NAME');
+        $this->host = $this->config->getEnv('MYSQL_HOST');
+        $this->user = $this->config->getEnv('MYSQL_USER');
+        $this->password = $this->config->getEnv('MYSQL_PASSWORD');
+        $this->database = $this->config->getEnv('MYSQL_DATABASE');
 
         if (!$this->host || !$this->user || !$this->password || !$this->database) {
-            throw new Exception('Incomplete database credentials, check .env settings!');
+            $this->log('Incomplete database credentials, check .env settings!', 1);
+            exit();
         }
 
         $this->connect();
@@ -55,7 +56,13 @@ class Database
             VALUES
             (' . substr(str_repeat('?, ', count($data)), 0, -2) . ')';
         $stmt = $this->pdo->prepare($prepare);
-        return $stmt->execute(array_values($data));
+        try {
+            $stmt->execute(array_values($data));
+            return true;
+        } catch (\Exception $e) {
+            $this->log("Could not insert data: " . $e->getMessage(), 1);
+            return false;
+        }
     }
 
     public function getTaxonNames ($bySource = true)
@@ -101,6 +108,18 @@ class Database
             ];
             $this->pdo = new PDO($dsn, $this->user, $this->password, $options);
         }
+    }
+
+    public function log ($message, $level = 3)
+    {
+        $levels = [
+            1 => 'Error',
+            2 => 'Warning',
+            3 => 'Info',
+            4 => 'Debug',
+        ];
+        echo date('d-M-Y H:i:s') . ' - ' . get_class() . ' - ' .
+            $levels[$level] . ' - ' . $message . "\n";
     }
 
 

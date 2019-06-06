@@ -14,6 +14,7 @@ class Ttik extends AbstractClass
     private $from = '19000101';
     private $names = [];
     private $taxa = [];
+    private $totalTaxa = 0;
     private $currentTaxonId;
 
     const TABLE = 'ttik';
@@ -23,18 +24,22 @@ class Ttik extends AbstractClass
         parent::__construct();
 
         $this->url = $this->setPath($this->config->getEnv('REAPER_URL_TTIK')) . 'names.php';
+
         $this->curl = new Curl();
+        $this->curl->setOpt(CURLOPT_TIMEOUT, 5);
     }
 
     public function __destruct ()
     {
+        $this->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->totalTaxa . ' taxa');
         $this->curl->close();
     }
 
     public function import ()
     {
         $this->emptyTable(self::TABLE);
-        $this->setTotalNames();
+        $this->setTotal();
+        $this->log("Retrieving data for " . $this->total . " scientific and common names");
         // Run in batches
         for ($this->offset = 0; $this->offset < $this->total; $this->offset += $this->rows) {
             $this->setNames();
@@ -52,13 +57,19 @@ class Ttik extends AbstractClass
     private function insertData ($all = false)
     {
         foreach ($this->taxa as $key => $taxon) {
+            $this->totalTaxa++;
+            $scientificName = trim($taxon['uninomial'] . ' ' . $taxon['specific_epithet'] . ' ' .
+                $taxon['infra_specific_epithet']);
             end($this->taxa);
             if ($key === key($this->taxa) && !$all) {
                 break;
             }
             if ($this->pdo->insertRow(self::TABLE, $taxon)) {
                 $this->imported++;
+                $this->log("Inserted data for '$scientificName'");
                 unset($this->taxa[$key]);
+            } else {
+                $this->log("Could not insert data for '$scientificName'", 1);
             }
         }
     }
@@ -72,7 +83,8 @@ class Ttik extends AbstractClass
             'offset' => $this->offset,
         ]);
         if ($this->curl->error) {
-            throw new \Exception('Error fetching ' . $this->url . ': ' . $this->curl->error_code);
+            $this->log("Cannot retrieve species names, aborting import", 1);
+            exit();
         }
         $data = json_decode($this->curl->response);
         $this->names = $data->names;
@@ -116,7 +128,7 @@ class Ttik extends AbstractClass
         return $name;
     }
 
-    private function setTotalNames ()
+    private function setTotal ()
     {
         if ($this->total == 0) {
             $this->curl->get($this->url, [

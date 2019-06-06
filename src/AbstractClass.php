@@ -35,6 +35,7 @@ class AbstractClass
     protected function emptyTable ($table)
     {
         $this->pdo->query('TRUNCATE TABLE `' . $table . '`');
+        $this->log("Truncated table '" . $table . "'");
     }
 
     // Workaround for bug in SimpleHtmlDom
@@ -69,15 +70,30 @@ class AbstractClass
     public function getSpeciesNames ()
     {
         foreach ($this->getTaxonNames(false) as $taxon) {
-            $tmp = explode(' ', $taxon);
+            $tmp = array_filter(explode(' ', $taxon));
             if (count($tmp) >= 2) {
-                $species[] = $tmp[0] . ' ' . $tmp[1];
+                $species[] = ucfirst($tmp[0]) . ' ' . $tmp[1];
             }
         }
         natcasesort($species);
-        return array_unique($species);
+        return array_filter(array_unique($species));
     }
 
+    public function log ($message, $level = 3)
+    {
+        $levels = [
+            1 => 'Error',
+            2 => 'Warning',
+            3 => 'Info',
+            4 => 'Debug',
+        ];
+        echo date('d-M-Y H:i:s') . ' - ' . get_class($this) . ' - ' .
+            $levels[$level] . ' - ' . $message . "\n";
+    }
 
+    protected function setReadyMessage ()
+    {
+        $this->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->total . ' names');
+    }
 
 }

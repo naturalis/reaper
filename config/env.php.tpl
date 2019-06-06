@@ -7,10 +7,10 @@
 
     $envs = [
         // Database
-        'REAPER_DB_HOST' => 'localhost',
-        'REAPER_DB_USERNAME' => 'user',
-        'REAPER_DB_PASSWORD' => 'password',
-        'REAPER_DB_NAME' => 'reaper',
+        'MYSQL_HOST' => 'localhost',
+        'MYSQL_USER' => 'root',
+        'MYSQL_PASSWORD' => '',
+        'MYSQL_DATABASE' => 'reaper',
         // File storage
         'REAPER_FILE_BASE_PATH' => '/path/to/reaper/files/',
         // Tentoonstelling
