@@ -94,7 +94,16 @@ class Database
         natcasesort($natuurwijzer);
         $data['natuurwijzer'] = array_unique($natuurwijzer);
         return isset($data) ? $data : [];
-}
+    }
+
+    public function getRegistrationNumbers ()
+    {
+        $stmt = $this->pdo->query("select Registratienummer, SCName from tentoonstelling");
+        while ($row = $stmt->fetch()) {
+            $data[$row['Registratienummer']] = $row['SCName'];
+        }
+        return isset($data) ? $data : 'henk';
+    }
 
     private function connect ()
     {

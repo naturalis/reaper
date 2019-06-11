@@ -22,22 +22,31 @@ class Topstukken extends AbstractClass
         $this->curl = new Curl();
         $this->curl->get($this->url);
         if ($this->curl->error) {
-            throw new \Exception('Error fetching ' . $this->url . ': ' . $this->curl->error_code);
+            $this->log('Cannot connect to ' .  $this->url . ': ' . $this->curl->error_message, 1);
+            exit();
         }
         unset($this->curl);
+    }
+
+    public function __destruct ()
+    {
+        $this->log('Ready! Inserted ' . $this->imported . ' out of ' .
+            ($this->total - 1) . ' registration numbers');
     }
 
     public function import ()
     {
         $index = $this->extractJson($this->url);
-        foreach ($index->grid->items as $item) {
-            $this->objects[$item->id] = $item->slug;
-        }
-        $this->total = count($index);
-        $this->emptyTable(self::TABLE);
-        foreach ($this->objects as $id => $slug) {
-            $url = $this->setPath($this->url) . 'object/' . $slug;
-            $this->insertData($this->extractJson($url));
+        if (!empty($index->grid->items)) {
+            foreach ($index->grid->items as $item) {
+                $this->objects[$item->id] = $item->slug;
+            }
+            $this->total = count($index);
+            $this->emptyTable(self::TABLE);
+            foreach ($this->objects as $id => $slug) {
+                $url = $this->setPath($this->url) . 'object/' . $slug;
+                $this->insertData($this->extractJson($url));
+            }
         }
     }
 
@@ -59,16 +68,17 @@ class Topstukken extends AbstractClass
             }
         }
         if (empty($var)) {
-            throw new \Exception('Cannot parse data from ' . $url);
+            $this->log('Cannot parse data from ' . $url, 1);
+            return false;
         }
         $first = strpos($var, '{');
         $json = substr($var, $first, strrpos($var, '}') - $first + 1);
-        $data = json_decode($json);
-        return $data ?: null;
+        return json_decode($json);
     }
 
     private function insertData ($object)
     {
+        $this->total++;
         $description = '';
         $data = (array)$object->specimen->info;
         if (isset($object->specimen->blocks)) {
@@ -80,6 +90,9 @@ class Topstukken extends AbstractClass
         $data['description'] = $description;
         if ($this->pdo->insertRow(self::TABLE, $data)) {
             $this->imported++;
+            $this->log("Inserted data for '" . $data['registrationNumber'] . "'");
+        } else {
+            $this->log("Could not insert data for '" . $data['registrationNumber'] . "'", 1);
         }
     }
 }
