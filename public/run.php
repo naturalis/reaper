@@ -8,12 +8,7 @@ use Reaper\Natuurwijzer as Natuurwijzer;
 use Reaper\Crs as Crs;
 use Reaper\Logger as Logger;
 
-
 require_once __DIR__ . '/../vendor/autoload.php';
-
-/*
-    php run.php --source=
-*/
 
 $opt = getopt("",["source:"]);
 
