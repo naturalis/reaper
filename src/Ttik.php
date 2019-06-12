@@ -31,7 +31,7 @@ class Ttik extends AbstractClass
 
     public function __destruct ()
     {
-        $this->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->totalTaxa . ' taxa');
+        $this->logger->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->totalTaxa . ' taxa');
         $this->curl->close();
     }
 
@@ -39,7 +39,7 @@ class Ttik extends AbstractClass
     {
         $this->emptyTable(self::TABLE);
         $this->setTotal();
-        $this->log("Retrieving data for " . $this->total . " scientific and common names");
+        $this->logger->log("Retrieving data for " . $this->total . " scientific and common names");
         // Run in batches
         for ($this->offset = 0; $this->offset < $this->total; $this->offset += $this->rows) {
             $this->setNames();
@@ -66,10 +66,10 @@ class Ttik extends AbstractClass
             }
             if ($this->pdo->insertRow(self::TABLE, $taxon)) {
                 $this->imported++;
-                $this->log("Inserted data for '$scientificName'");
+                $this->logger->log("Inserted data for '$scientificName'");
                 unset($this->taxa[$key]);
             } else {
-                $this->log("Could not insert data for '$scientificName'", 1);
+                $this->logger->log("Could not insert data for '$scientificName'", 1);
             }
         }
     }
@@ -83,7 +83,7 @@ class Ttik extends AbstractClass
             'offset' => $this->offset,
         ]);
         if ($this->curl->error) {
-            $this->log("Cannot retrieve species names, aborting import", 1);
+            $this->logger->log("Cannot retrieve species names, aborting import", 1);
             exit();
         }
         $data = json_decode($this->curl->response);

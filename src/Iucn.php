@@ -35,11 +35,11 @@ class Iucn extends AbstractClass
         $this->emptyTable(self::TABLE);
         $this->species = $this->getSpeciesNames();
         $this->total = count($this->species);
-        $this->log("Retrieving data for " . $this->total . " species names");
+        $this->logger->log("Retrieving data for " . $this->total . " species names");
         foreach ($this->species as $this->currentSpecies) {
             $this->curl->get(sprintf($this->url, rawurlencode($this->currentSpecies)));
             if ($this->curl->error) {
-                $this->log("Error retrieving data for " . $this->currentSpecies .
+                $this->logger->log("Error retrieving data for " . $this->currentSpecies .
                     ': ' . $this->curl->error_message, 1);
             } else {
                 $this->insertData(json_decode($this->curl->response));
@@ -50,7 +50,7 @@ class Iucn extends AbstractClass
     private function insertData ($row)
     {
         if (empty($row->result) || !$this->currentSpecies) {
-            $this->log("No data found for '" . $this->currentSpecies . "'");
+            $this->logger->log("No data found for '" . $this->currentSpecies . "'");
             return false;
         }
         $data = (array)$row->result[0];
@@ -67,10 +67,10 @@ class Iucn extends AbstractClass
             }
         }
         if ($this->pdo->insertRow(self::TABLE, $data)) {
-            $this->log("Inserted data for '" . $this->currentSpecies . "'");
+            $this->logger->log("Inserted data for '" . $this->currentSpecies . "'");
             $this->imported++;
         } else {
-            $this->log("Could not insert data for '" . $this->currentSpecies . "'", 1);
+            $this->logger->log("Could not insert data for '" . $this->currentSpecies . "'", 1);
         }
         $this->resetCurrentSpecies();
     }

@@ -26,7 +26,7 @@ class Tentoonstelling extends AbstractClass
         $this->csvFile = $this->config->getEnv('REAPER_FILE_TENTOONSTELLING_CSV');
 
         if (!$this->basePath || !$this->csvFile) {
-            $this->log('No path settings for Tentoonstelling csv file!', 1);
+            $this->logger->log('No path settings for Tentoonstelling csv file!', 1);
             exit();
         }
 
@@ -35,7 +35,7 @@ class Tentoonstelling extends AbstractClass
 
     public function __destruct ()
     {
-        $this->log('Ready! Inserted ' . $this->imported . ' out of ' .
+        $this->logger->log('Ready! Inserted ' . $this->imported . ' out of ' .
             $this->total . ' registration numbers');
     }
 
@@ -43,7 +43,7 @@ class Tentoonstelling extends AbstractClass
     {
         ini_set("auto_detect_line_endings", true);
         if (!($fh = fopen($this->csvPath, "r"))) {
-            $this->log('Cannot read ' . $this->csvPath, 1);
+            $this->logger->log('Cannot read ' . $this->csvPath, 1);
             exit();
         }
         $i = 0;
@@ -79,10 +79,10 @@ class Tentoonstelling extends AbstractClass
         if (!empty($data['Registratienummer'])) {
             $this->total++;
             if ($this->pdo->insertRow(self::TABLE, $data)) {
-                $this->log("Inserted data for '" . $data['Registratienummer'] . "'");
+                $this->logger->log("Inserted data for '" . $data['Registratienummer'] . "'");
                 $this->imported++;
             } else {
-                $this->log("Could not insert data for '" . $data['Registratienummer'] . "'", 1);
+                $this->logger->log("Could not insert data for '" . $data['Registratienummer'] . "'", 1);
             }
         }
     }

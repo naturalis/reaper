@@ -22,7 +22,7 @@ class Topstukken extends AbstractClass
         $this->curl = new Curl();
         $this->curl->get($this->url);
         if ($this->curl->error) {
-            $this->log('Cannot connect to ' .  $this->url . ': ' . $this->curl->error_message, 1);
+            $this->logger->log('Cannot connect to ' .  $this->url . ': ' . $this->curl->error_message, 1);
             exit();
         }
         unset($this->curl);
@@ -30,7 +30,7 @@ class Topstukken extends AbstractClass
 
     public function __destruct ()
     {
-        $this->log('Ready! Inserted ' . $this->imported . ' out of ' .
+        $this->logger->log('Ready! Inserted ' . $this->imported . ' out of ' .
             ($this->total - 1) . ' registration numbers');
     }
 
@@ -68,7 +68,7 @@ class Topstukken extends AbstractClass
             }
         }
         if (empty($var)) {
-            $this->log('Cannot parse data from ' . $url, 1);
+            $this->logger->log('Cannot parse data from ' . $url, 1);
             return false;
         }
         $first = strpos($var, '{');
@@ -90,9 +90,9 @@ class Topstukken extends AbstractClass
         $data['description'] = $description;
         if ($this->pdo->insertRow(self::TABLE, $data)) {
             $this->imported++;
-            $this->log("Inserted data for '" . $data['registrationNumber'] . "'");
+            $this->logger->log("Inserted data for '" . $data['registrationNumber'] . "'");
         } else {
-            $this->log("Could not insert data for '" . $data['registrationNumber'] . "'", 1);
+            $this->logger->log("Could not insert data for '" . $data['registrationNumber'] . "'", 1);
         }
     }
 }

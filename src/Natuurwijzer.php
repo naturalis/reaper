@@ -55,9 +55,9 @@ class Natuurwijzer extends AbstractClass
                 $this->rooms[] = $room->attributes->name;
             }
             if (!empty($this->rooms)) {
-                $this->log('Retrieved ' . count($this->rooms) . ' rooms');
+                $this->logger->log('Retrieved ' . count($this->rooms) . ' rooms');
             } else {
-                $this->log('Could not retrieve rooms; aborting', 1);
+                $this->logger->log('Could not retrieve rooms; aborting', 1);
             }
         }
         return $this->rooms;
@@ -95,15 +95,15 @@ class Natuurwijzer extends AbstractClass
     private function insertData ()
     {
         if (empty($this->objects)) {
-            $this->log("No objects found for room '" . $this->currentRoom . "'", 2);
+            $this->logger->log("No objects found for room '" . $this->currentRoom . "'", 2);
             return false;
         }
         foreach ($this->objects as $object) {
             if ($this->pdo->insertRow(self::TABLE, $object)) {
-                $this->log("Inserted data for '" . $object['title'] . "'");
+                $this->logger->log("Inserted data for '" . $object['title'] . "'");
                 $this->imported++;
             } else {
-                $this->log("Could not insert data for '" . $object['title'] . "'", 1);
+                $this->logger->log("Could not insert data for '" . $object['title'] . "'", 1);
             }
         }
     }

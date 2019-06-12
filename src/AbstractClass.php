@@ -3,6 +3,7 @@
 namespace Reaper;
 
 use Reaper\Config as Config;
+use Reaper\Logger as Logger;
 
 class AbstractClass
 {
@@ -16,6 +17,9 @@ class AbstractClass
     {
         $this->config = new Config();
         $this->config->setEnvs();
+
+        $this->logger = new Logger();
+
         $this->pdo = new Database();
     }
 
@@ -35,7 +39,7 @@ class AbstractClass
     protected function emptyTable ($table)
     {
         $this->pdo->query('TRUNCATE TABLE `' . $table . '`');
-        $this->log("Truncated table '" . $table . "'");
+        $this->logger->log("Truncated table '" . $table . "'");
     }
 
     // Workaround for bug in SimpleHtmlDom
@@ -79,21 +83,10 @@ class AbstractClass
         return array_filter(array_unique($species));
     }
 
-    public function log ($message, $level = 3)
+    public function setReadyMessage ()
     {
-        $levels = [
-            1 => 'Error',
-            2 => 'Warning',
-            3 => 'Info',
-            4 => 'Debug',
-        ];
-        echo date('d-M-Y H:i:s') . ' - ' . get_class($this) . ' - ' .
-            $levels[$level] . ' - ' . $message . "\n";
+        $this->logger->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->total . ' names');
     }
 
-    protected function setReadyMessage ()
-    {
-        $this->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->total . ' names');
-    }
 
 }

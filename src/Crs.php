@@ -25,7 +25,7 @@ class Crs extends AbstractClass
         $this->csvFile = $this->config->getEnv('REAPER_FILE_CRS_CSV');
 
         if (!$this->basePath || !$this->csvFile) {
-            $this->log('No path settings for CRS csv file!', 1);
+            $this->logger->log('No path settings for CRS csv file!', 1);
             exit();
         }
 
@@ -34,7 +34,7 @@ class Crs extends AbstractClass
 
     public function __destruct ()
     {
-        $this->log('Ready! Inserted ' . $this->imported . ' out of ' .
+        $this->logger->log('Ready! Inserted ' . $this->imported . ' out of ' .
             $this->total . ' image paths');
     }
 
@@ -42,7 +42,7 @@ class Crs extends AbstractClass
     {
         ini_set("auto_detect_line_endings", true);
         if (!($fh = fopen($this->csvPath, "r"))) {
-            $this->log('Cannot read ' . $this->csvPath, 1);
+            $this->logger->log('Cannot read ' . $this->csvPath, 1);
             exit();
         }
         $i = 0;
@@ -78,10 +78,10 @@ class Crs extends AbstractClass
         if (!empty($data['REGISTRATIONNUMBER'])) {
             $this->total++;
             if ($this->pdo->insertRow(self::TABLE, $data)) {
-                $this->log("Inserted data for '" . $data['REGISTRATIONNUMBER'] . "'");
+                $this->logger->log("Inserted data for '" . $data['REGISTRATIONNUMBER'] . "'");
                 $this->imported++;
             } else {
-                $this->log("Could not insert data for '" . $data['REGISTRATIONNUMBER'] . "'", 1);
+                $this->logger->log("Could not insert data for '" . $data['REGISTRATIONNUMBER'] . "'", 1);
             }
         }
     }

@@ -6,7 +6,6 @@ use Reaper\Ttik as Ttik;
 use Reaper\Iucn as Iucn;
 use Reaper\Natuurwijzer as Natuurwijzer;
 use Reaper\Crs as Crs;
-use Reaper\Export as Export;
 use Reaper\Logger as Logger;
 
 
