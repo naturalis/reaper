@@ -144,7 +144,7 @@ class Ttik extends AbstractClass
 
     private function getTaxonDescription ($taxonId)
     {
-        $description = '';
+        $description = [];
         foreach ([1, 4, 5] as $cat) {
             $url = $this->setPath($this->config->getEnv('REAPER_URL_TTIK')) . 'taxon_page.php';
             $this->curl->get($url, [
@@ -154,10 +154,10 @@ class Ttik extends AbstractClass
             ]);
             $data = json_decode($this->curl->response);
             if (!empty($data->page->body)) {
-                $description .= '<h4>' . $data->page->title . "</h4>\n" . $data->page->body . "\n";
+                $description[] = [$data->page->title, $data->page->body];
             }
         }
-        return $description;
+        return json_encode($description);
     }
 
     private function getTaxonClassification ($taxonId)

@@ -8,6 +8,7 @@ use Curl\Curl;
 class Topstukken extends AbstractClass
 {
     private $url;
+    private $objectUrl;
     private $curl;
     private $objects = [];
 
@@ -44,9 +45,11 @@ class Topstukken extends AbstractClass
             $this->total = count($index);
             $this->emptyTable(self::TABLE);
             foreach ($this->objects as $id => $slug) {
-                $url = $this->setPath($this->url) . 'object/' . $slug;
-                $this->insertData($this->extractJson($url));
+                $this->objectUrl = $this->setPath($this->url) . 'object/' . $slug;
+                $this->insertData($this->extractJson());
             }
+        } else {
+            $this->logger->log('Cannot extrax');
         }
     }
 
@@ -54,8 +57,11 @@ class Topstukken extends AbstractClass
      * This assumes that a script with the variable INITIAL_DATA is present containing the
      * complete dataset.
      */
-    private function extractJson ($url)
+    private function extractJson ($url = false)
     {
+        if (!$url) {
+            $url = $this->objectUrl;
+        }
         $html = HtmlDomParser::file_get_html($url);
         foreach ($html->find('script') as $script) {
             if (strpos($script->nodeValue, 'INITIAL_DATA')) {
@@ -68,7 +74,7 @@ class Topstukken extends AbstractClass
             }
         }
         if (empty($var)) {
-            $this->logger->log('Cannot parse data from ' . $url, 1);
+            $this->logger->log('Cannot parse data from ' . $this->objectUrl, 1);
             return false;
         }
         $first = strpos($var, '{');
@@ -79,15 +85,15 @@ class Topstukken extends AbstractClass
     private function insertData ($object)
     {
         $this->total++;
-        $description = '';
+        $description = [];
         $data = (array)$object->specimen->info;
         if (isset($object->specimen->blocks)) {
             foreach ($object->specimen->blocks as $block) {
-                $description .= '<h4>' . $block->title . "</h4>\n";
-                $description .= $block->body;
+                $description[] = [$block->title, $block->body];
             }
         }
-        $data['description'] = $description;
+        $data['description'] = json_encode($description);
+        $data['url'] = $this->objectUrl;
         if ($this->pdo->insertRow(self::TABLE, $data)) {
             $this->imported++;
             $this->logger->log("Inserted data for '" . $data['registrationNumber'] . "'");

@@ -116,6 +116,7 @@ CREATE TABLE `topstukken` (
   `year` varchar(10) DEFAULT NULL,
   `expedition` varchar(100) DEFAULT NULL,
   `collector` varchar(100) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `scientificName` (`scientificName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
