@@ -154,7 +154,7 @@ class Ttik extends AbstractClass
             ]);
             $data = json_decode($this->curl->response);
             if (!empty($data->page->body)) {
-                $description[] = [$data->page->title, $data->page->body];
+                $description[] = [ "title" => $data->page->title, "body" => $data->page->body];
             }
         }
         return json_encode($description);
