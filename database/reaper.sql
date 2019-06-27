@@ -58,6 +58,7 @@ CREATE TABLE `iucn` (
   `errata_reason` text,
   `amended_flag` tinyint(1) DEFAULT NULL,
   `amended_reason` text,
+  `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -79,6 +80,7 @@ CREATE TABLE `natuurwijzer` (
   `author` varchar(100) DEFAULT NULL,
   `intro_text` text,
   `langcode` varchar(10) DEFAULT NULL,
+  `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -95,6 +97,7 @@ CREATE TABLE `tentoonstelling` (
   `Zaal` varchar(50) DEFAULT NULL,
   `Zaaldeel` varchar(100) DEFAULT NULL,
   `SCname` varchar(255) DEFAULT NULL,
+  `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `SCname` (`SCname`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -117,6 +120,7 @@ CREATE TABLE `topstukken` (
   `expedition` varchar(100) DEFAULT NULL,
   `collector` varchar(100) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
+  `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `scientificName` (`scientificName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -141,6 +145,7 @@ CREATE TABLE `ttik` (
   `english` text DEFAULT NULL,
   `dutch` text DEFAULT NULL,
   `taxon_id` int(11) unsigned NOT NULL,
+  `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `uninomial` (`uninomial`,`specific_epithet`,`infra_specific_epithet`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
