@@ -138,8 +138,8 @@ CREATE TABLE `ttik` (
   `authorship` varchar(255) DEFAULT NULL,
   `taxon` varchar(255) DEFAULT NULL,
   `rank` varchar(20) DEFAULT NULL,
-  `english` varchar(255) DEFAULT NULL,
-  `dutch` varchar(255) DEFAULT NULL,
+  `english` text DEFAULT NULL,
+  `dutch` text DEFAULT NULL,
   `taxon_id` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uninomial` (`uninomial`,`specific_epithet`,`infra_specific_epithet`)

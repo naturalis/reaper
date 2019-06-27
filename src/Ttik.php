@@ -51,7 +51,7 @@ class Ttik extends AbstractClass
 
     /* Keep the taxa array as lean as possible by removing taxa that have been inserted. However!
     The data for a taxon may be incomplete, as we're looping over names, not taxa. Therefore,
-    always keep the skip the last taxon in the array. Only when the parameter all has been set,
+    always keep the last taxon in the array. Only when the parameter all has been set,
     all taxa should be inserted.
     */
     private function insertData ($all = false)
@@ -94,6 +94,7 @@ class Ttik extends AbstractClass
     {
         foreach ($this->names as $name) {
             $id = $name->taxon_id;
+            $common = [];
             // Add just once for the first iteration of a taxon
             if ($name->taxon_id != $this->currentTaxonId) {
                 $this->taxa[$id]['description'] = $this->getTaxonDescription($id);
@@ -102,7 +103,12 @@ class Ttik extends AbstractClass
             if ($name->language == 'Scientific') {
                 $this->taxa[$id] = array_merge($this->taxa[$id], $this->stripNameData((array)$name));
             } else if (in_array($name->language, ['English', 'Dutch'])) {
-                $this->taxa[$id][strtolower($name->language)] = $name->name;
+                // json-encoded, so have to unpack and repack if necessary
+                $common[] = ['name' => $name->name, 'nametype' => $name->nametype];
+                if (!empty($this->taxa[$id][strtolower($name->language)])) {
+                    $common = json_decode($this->taxa[$id][strtolower($name->language)]) + $common;
+                }
+                $this->taxa[$id][strtolower($name->language)] = json_encode($common);
             }
             $this->currentTaxonId = $id;
         }
