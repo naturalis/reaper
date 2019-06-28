@@ -22,6 +22,7 @@
         // IUCN
         'REAPER_URL_IUCN' => 'https://apiv3.iucnredlist.org/api/v3/species/%s',
         'REAPER_KEY_IUCN' => '',
+        'REAPER_RATE_LIMIT_IUCN' => '', // in seconds
         // Natuurwijzer
         'REAPER_URL_NATUURWIJZER' => 'https://natuurwijzer-acc.naturalis.nl/api/v2/',
         'REAPER_USER_NATUURWIJZER' => '',

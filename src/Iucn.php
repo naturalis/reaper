@@ -10,6 +10,7 @@ class Iucn extends AbstractClass
     private $url;
     private $species;
     private $currentSpecies;
+    private $rateLimit;
 
     const TABLE = 'iucn';
 
@@ -19,6 +20,8 @@ class Iucn extends AbstractClass
 
         $this->url = $this->config->getEnv('REAPER_URL_IUCN') . '?token=' .
             $this->config->getEnv('REAPER_KEY_IUCN');
+        $this->rateLimit = !is_null($this->config->getEnv('REAPER_RATE_LIMIT_IUCN')) ?
+            (float)$this->config->getEnv('REAPER_RATE_LIMIT_IUCN') : 0;
 
         $this->curl = new Curl();
         $this->curl->setOpt(CURLOPT_TIMEOUT, 5);
@@ -44,6 +47,7 @@ class Iucn extends AbstractClass
             } else {
                 $this->insertData(json_decode($this->curl->response));
             }
+            sleep($this->rateLimit);
         }
     }
 
