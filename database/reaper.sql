@@ -150,8 +150,16 @@ CREATE TABLE `ttik` (
   KEY `uninomial` (`uninomial`,`specific_epithet`,`infra_specific_epithet`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `crs`;
 
-
+CREATE TABLE `crs` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `REGISTRATIONNUMBER` varchar(50) DEFAULT NULL,
+    `FULLSCIENTIFICNAME` varchar(255) DEFAULT NULL,
+    `URL` varchar(255) DEFAULT NULL,
+    `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
