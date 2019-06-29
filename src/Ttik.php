@@ -106,7 +106,8 @@ class Ttik extends AbstractClass
                 // json-encoded, so have to unpack and repack if necessary
                 $common[] = ['name' => $name->name, 'nametype' => $name->nametype];
                 if (!empty($this->taxa[$id][strtolower($name->language)])) {
-                    $common = json_decode($this->taxa[$id][strtolower($name->language)]) + $common;
+                    // $common = json_decode($this->taxa[$id][strtolower($name->language)]) + $common;
+                    $common = array_merge(json_decode($this->taxa[$id][strtolower($name->language)]),$common);
                 }
                 $this->taxa[$id][strtolower($name->language)] = json_encode($common);
             }
