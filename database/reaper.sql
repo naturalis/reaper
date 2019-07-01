@@ -144,6 +144,7 @@ CREATE TABLE `ttik` (
   `rank` varchar(20) DEFAULT NULL,
   `english` text DEFAULT NULL,
   `dutch` text DEFAULT NULL,
+  `scientific` text DEFAULT NULL,
   `taxon_id` int(11) unsigned NOT NULL,
   `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
