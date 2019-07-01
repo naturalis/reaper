@@ -100,9 +100,9 @@ class Ttik extends AbstractClass
                 $this->taxa[$id]['description'] = $this->getTaxonDescription($id);
                 $this->taxa[$id]['classification'] = $this->getTaxonClassification($id);
             }
-            if ($name->language == 'Scientific' && $name->nametype=='isValidNameOf') {
+            if ($name->language == 'Scientific') {
                 $this->taxa[$id] = array_merge($this->taxa[$id], $this->stripNameData((array)$name));
-            } else if (in_array($name->language, ['English', 'Dutch', 'Scientific'])) {
+            } else if (in_array($name->language, ['English', 'Dutch'])) {
                 // json-encoded, so have to unpack and repack if necessary
                 $common[] = ['name' => $name->name, 'nametype' => $name->nametype];
                 if (!empty($this->taxa[$id][strtolower($name->language)])) {
