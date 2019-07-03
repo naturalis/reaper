@@ -8,7 +8,7 @@ class Ttik extends AbstractClass
 {
     private $curl;
     private $url;
-    private $rows = 500;
+    private $rows = 75;
     private $offset = 0;
     private $pid = 1;
     private $from = '19000101';
@@ -31,7 +31,7 @@ class Ttik extends AbstractClass
 
     public function __destruct ()
     {
-        $this->logger->log('Ready! Inserted ' . $this->imported . ' out of ' . $this->totalTaxa . ' taxa');
+        $this->logger->log('Ready! Inserted ' . $this->imported . ' taxa');
         $this->curl->close();
     }
 
@@ -40,10 +40,11 @@ class Ttik extends AbstractClass
         $this->emptyTable(self::TABLE);
         $this->setTotal();
         $this->logger->log("Retrieving data for " . $this->total . " scientific and common names");
-        // Run in batches
+        // Fetch in batches
         for ($this->offset = 0; $this->offset < $this->total; $this->offset += $this->rows) {
             $this->setNames();
             $this->setTaxa();
+            $this->logger->log("Fetched $this->rows new names (" . (count($this->taxa) - 1) . " taxa)");
             $this->insertData();
         }
         $this->insertData(true);
@@ -57,7 +58,6 @@ class Ttik extends AbstractClass
     private function insertData ($all = false)
     {
         foreach ($this->taxa as $key => $taxon) {
-            $this->totalTaxa++;
             $scientificName = trim($taxon['uninomial'] . ' ' . $taxon['specific_epithet'] . ' ' .
                 $taxon['infra_specific_epithet']);
             end($this->taxa);
@@ -81,6 +81,7 @@ class Ttik extends AbstractClass
             'from' => $this->from,
             'rows' => $this->rows,
             'offset' => $this->offset,
+            'all' => 1,
         ]);
         if ($this->curl->error) {
             $this->logger->log("Cannot retrieve species names, aborting import", 1);
@@ -95,18 +96,35 @@ class Ttik extends AbstractClass
         foreach ($this->names as $name) {
             $id = $name->taxon_id;
             $common = [];
+            $synonyms = [];
             // Add just once for the first iteration of a taxon
-            if ($name->taxon_id != $this->currentTaxonId) {
+            if ($id != $this->currentTaxonId) {
                 $this->taxa[$id]['description'] = $this->getTaxonDescription($id);
                 $this->taxa[$id]['classification'] = $this->getTaxonClassification($id);
+                $this->taxa[$id]['synonyms'] = null;
             }
-            if ($name->language == 'Scientific') {
+            // Valid name; add main data
+            if ($name->language == 'Scientific' && $name->nametype == 'isValidNameOf') {
                 $this->taxa[$id] = array_merge($this->taxa[$id], $this->stripNameData((array)$name));
+                $this->totalTaxa++;
+            // Synonyms
+            } else if ($name->language == 'Scientific') {
+                $synonyms[] = [
+                    'uninomial' => $name->uninomial,
+                    'specific_epithet' => $name->specific_epithet,
+                    'infra_specific_epithet' => $name->infra_specific_epithet,
+                    'authorship' => $name->authorship,
+                    'nametype' => $name->nametype,
+                ];
+                if (!empty($this->taxa[$id]['synonyms'])) {
+                    $synonyms[] = array_merge(json_decode($this->taxa[$id]['synonyms']), $synonyms);
+                }
+                $this->taxa[$id]['synonyms'] = json_encode($synonyms);
+            // Common names in Dutch or English
             } else if (in_array($name->language, ['English', 'Dutch'])) {
-                // json-encoded, so have to unpack and repack if necessary
                 $common[] = ['name' => $name->name, 'nametype' => $name->nametype];
                 if (!empty($this->taxa[$id][strtolower($name->language)])) {
-                    $common = json_decode($this->taxa[$id][strtolower($name->language)]) + $common;
+                    $common = array_merge(json_decode($this->taxa[$id][strtolower($name->language)]), $common);
                 }
                 $this->taxa[$id][strtolower($name->language)] = json_encode($common);
             }
@@ -141,6 +159,7 @@ class Ttik extends AbstractClass
                 'pid' => $this->pid,
                 'from' => $this->from,
                 'count' => 1,
+                'all' => 1,
             ]);
             $data = json_decode($this->curl->response);
             $this->total = $data->count;
