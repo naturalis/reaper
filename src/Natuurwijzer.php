@@ -21,10 +21,18 @@ class Natuurwijzer extends AbstractClass
         $this->url = $this->setPath($this->config->getEnv('REAPER_URL_NATUURWIJZER'));
 
         $this->curl = new Curl();
-        $this->curl->setBasicAuthentication(
-            $this->config->getEnv('REAPER_USER_NATUURWIJZER'),
-            $this->config->getEnv('REAPER_PASSWORD_NATUURWIJZER')
-        );
+
+        if (
+            !empty($this->config->getEnv('REAPER_USER_NATUURWIJZER')) && 
+            !empty($this->config->getEnv('REAPER_PASSWORD_NATUURWIJZER'))
+        )
+        {
+            $this->curl->setBasicAuthentication(
+                $this->config->getEnv('REAPER_USER_NATUURWIJZER'),
+                $this->config->getEnv('REAPER_PASSWORD_NATUURWIJZER')
+            );
+        }
+
         $this->curl->setHeader('nw-access-token',
             $this->config->getEnv('REAPER_TOKEN_NATUURWIJZER'));
         $this->curl->setHeader('Cache-Control', 'no-cache');
