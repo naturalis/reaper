@@ -97,6 +97,7 @@ CREATE TABLE `tentoonstelling` (
   `Zaal` varchar(50) DEFAULT NULL,
   `Zaaldeel` varchar(100) DEFAULT NULL,
   `SCname` varchar(255) DEFAULT NULL,
+  `SCname controle` varchar(255) DEFAULT NULL,
   `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `SCname` (`SCname`(100))

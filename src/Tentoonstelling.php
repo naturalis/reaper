@@ -8,7 +8,8 @@ class Tentoonstelling extends AbstractClass
         'Registratienummer',
         'Zaal',
         'Zaaldeel',
-        'SCname',
+	'SCname',
+	'SCname controle'
     ];
 
     private $basePath;
