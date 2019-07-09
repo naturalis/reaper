@@ -163,6 +163,18 @@ CREATE TABLE `crs` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `nba`;
+
+CREATE TABLE `nba` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `unitid` varchar(50) DEFAULT NULL,
+    `name` varchar(1024) DEFAULT NULL,
+    `gatheringEvent` varchar(1024) DEFAULT NULL,
+    `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+                
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
