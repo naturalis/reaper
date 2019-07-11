@@ -169,7 +169,7 @@ CREATE TABLE `nba` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `unitid` varchar(50) DEFAULT NULL,
     `name` varchar(1024) DEFAULT NULL,
-    `gatheringEvent` varchar(1024) DEFAULT NULL,
+    `document` text DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
