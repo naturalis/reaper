@@ -113,6 +113,7 @@ DROP TABLE IF EXISTS `topstukken`;
 CREATE TABLE `topstukken` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `description` text,
+  `title` varchar(100) DEFAULT NULL,
   `registrationNumber` varchar(100) DEFAULT NULL,
   `collection` varchar(50) DEFAULT NULL,
   `country` varchar(50) DEFAULT NULL,
