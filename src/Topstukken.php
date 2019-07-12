@@ -49,7 +49,7 @@ class Topstukken extends AbstractClass
                 $this->insertData($this->extractJson());
             }
         } else {
-            $this->logger->log('Cannot extrax');
+            $this->logger->log('Cannot extract');
         }
     }
 
@@ -85,6 +85,7 @@ class Topstukken extends AbstractClass
     private function insertData ($object)
     {
         $this->total++;
+        $title = (array)$object->specimen->title;
         $description = [];
         $data = (array)$object->specimen->info;
         if (isset($object->specimen->blocks)) {
@@ -92,6 +93,7 @@ class Topstukken extends AbstractClass
                 $description[] = [$block->title, $block->body];
             }
         }
+        $data['title'] = $title;
         $data['description'] = json_encode($description);
         $data['url'] = $this->objectUrl;
         if ($this->pdo->insertRow(self::TABLE, $data)) {
