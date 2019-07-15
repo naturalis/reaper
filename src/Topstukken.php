@@ -85,7 +85,7 @@ class Topstukken extends AbstractClass
     private function insertData ($object)
     {
         $this->total++;
-        $title = (array)$object->specimen->title;
+        $title = $object->specimen->title;
         $description = [];
         $data = (array)$object->specimen->info;
         if (isset($object->specimen->blocks)) {

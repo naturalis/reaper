@@ -62,7 +62,7 @@ class Database
             return true;
         } catch (\Exception $e) {
             $this->logger->log("Could not insert data: " . $e->getMessage(), 1);
-            $this->logger->log('Insert data: ' . print_r($data));
+            $this->logger->log('Insert data: ' . print_r($data,true));
             return false;
         }
     }

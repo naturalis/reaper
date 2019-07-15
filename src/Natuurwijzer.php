@@ -11,6 +11,7 @@ class Natuurwijzer extends AbstractClass
     private $rooms = [];
     private $currentRoom;
     private $objects = [];
+    private $offset = 0;
 
     const TABLE = 'natuurwijzer';
 
@@ -47,45 +48,35 @@ class Natuurwijzer extends AbstractClass
     public function import ()
     {
         $this->emptyTable(self::TABLE);
-        foreach ($this->getRooms() as $this->currentRoom) {
-            $this->setObjectsInRoom();
+
+        $continue=true;
+        while ($continue)
+        {
+            $this->setObjects();
             $this->insertData();
+            $this->offset = $this->offset+50;
+            $continue = !empty($this->objects);
         }
     }
 
-    private function getRooms ()
-    {
-        if (empty($this->rooms)) {
-            $url = $this->url . 'taxonomy_term/exhibition_rooms';
-            $this->curl->get($url);
-            $data = json_decode($this->curl->response);
-            foreach ($data->data as $room) {
-                $this->rooms[] = $room->attributes->name;
-            }
-            if (!empty($this->rooms)) {
-                $this->logger->log('Retrieved ' . count($this->rooms) . ' rooms');
-            } else {
-                $this->logger->log('Could not retrieve rooms; aborting', 1);
-            }
-        }
-        return $this->rooms;
-    }
 
-    private function setObjectsInRoom ()
+    private function setObjects ()
     {
-        if (empty($this->currentRoom)) {
-            return false;
-        }
         $this->resetObjects();
 
-        $url = $this->url . 'learningobjects';
-        $this->curl->get($url, [
-            'filter[exhibition_rooms][condition][path]' => 'field_exhibition_rooms.name',
-            'filter[exhibition_rooms][condition][value]' => $this->currentRoom,
-        ]);
+        $url = str_replace('%OFFSET%', $this->offset, $this->url);
+
+        $this->curl->get($url);
 
         $data = json_decode($this->curl->response);
-        foreach ($data->data as $i => $row) {
+
+        foreach ($data->data as $i => $row)
+        {
+            if (empty($row->attributes->taxon) && empty($row->attributes->exhibition_rooms))
+            {
+                continue;
+            }
+
             $this->total++;
             $this->objects[$i]['title'] = $row->attributes->title;
             $this->objects[$i]['room'] = $this->currentRoom;
@@ -103,7 +94,6 @@ class Natuurwijzer extends AbstractClass
     private function insertData ()
     {
         if (empty($this->objects)) {
-            $this->logger->log("No objects found for room '" . $this->currentRoom . "'", 2);
             return false;
         }
         foreach ($this->objects as $object) {
