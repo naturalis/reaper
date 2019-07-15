@@ -191,6 +191,7 @@ CREATE TABLE `leenobjecten` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `registratienummer` varchar(50) DEFAULT NULL,
     `geleend_van` varchar(100) DEFAULT NULL,
+    `afbeeldingen` varchar(1024) DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
