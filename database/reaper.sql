@@ -30,6 +30,7 @@ CREATE TABLE `iucn` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `taxonid` int(11) DEFAULT NULL,
   `scientific_name` varchar(100) DEFAULT NULL,
+  `region` varchar(32) DEFAULT NULL,
   `kingdom` varchar(20) DEFAULT NULL,
   `phylum` varchar(20) DEFAULT NULL,
   `class` varchar(20) DEFAULT NULL,
