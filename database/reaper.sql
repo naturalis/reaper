@@ -207,6 +207,16 @@ CREATE TABLE `taxonlist` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `favourites`;
+
+CREATE TABLE `favourites` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `taxon` varchar(50) DEFAULT NULL,
+    `rank` int(3) DEFAULT 0,
+    `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
