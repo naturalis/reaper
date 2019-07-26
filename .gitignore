@@ -8,3 +8,4 @@ vendor/voku/
 /config/env.php
 /config/.env
 .idea*
+*.sh

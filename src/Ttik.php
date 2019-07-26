@@ -8,7 +8,7 @@ class Ttik extends AbstractClass
 {
     private $curl;
     private $url;
-    private $rows = 150;
+    private $rows = 500;
     private $offset = 0;
     private $pid = 1;
     private $from = '19000101';
