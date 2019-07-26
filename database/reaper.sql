@@ -171,6 +171,7 @@ CREATE TABLE `nba` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `unitid` varchar(50) DEFAULT NULL,
     `name` varchar(1024) DEFAULT NULL,
+    `collection` varchar(64) DEFAULT NULL,
     `document` text DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -203,8 +204,10 @@ CREATE TABLE `taxonlist` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `taxon` varchar(50) DEFAULT NULL,
     `taxonomy` text DEFAULT NULL,
+    `collection` varchar(64) DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `collection` (`collection`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `favourites`;
