@@ -123,6 +123,7 @@ CREATE TABLE `topstukken` (
   `expedition` varchar(100) DEFAULT NULL,
   `collector` varchar(100) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `scientificName` (`scientificName`)
@@ -139,9 +140,9 @@ CREATE TABLE `ttik` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `description` text,
   `classification` text,
-  `uninomial` varchar(50) DEFAULT NULL,
-  `specific_epithet` varchar(50) DEFAULT NULL,
-  `infra_specific_epithet` varchar(50) DEFAULT NULL,
+  `uninomial` varchar(255) DEFAULT NULL,
+  `specific_epithet` varchar(255) DEFAULT NULL,
+  `infra_specific_epithet` varchar(255) DEFAULT NULL,
   `authorship` varchar(255) DEFAULT NULL,
   `taxon` varchar(255) DEFAULT NULL,
   `rank` varchar(20) DEFAULT NULL,
@@ -171,6 +172,7 @@ CREATE TABLE `nba` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `unitid` varchar(50) DEFAULT NULL,
     `name` varchar(1024) DEFAULT NULL,
+    `collection` varchar(64) DEFAULT NULL,
     `document` text DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -203,6 +205,29 @@ CREATE TABLE `taxonlist` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `taxon` varchar(50) DEFAULT NULL,
     `taxonomy` text DEFAULT NULL,
+    `collection` varchar(64) DEFAULT NULL,
+    `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `collection` (`collection`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `favourites`;
+
+CREATE TABLE `favourites` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `taxon` varchar(50) DEFAULT NULL,
+    `rank` int(3) DEFAULT 0,
+    `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+                
+DROP TABLE IF EXISTS `taxa_no_objects`;
+
+CREATE TABLE `taxa_no_objects` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `taxon` varchar(50) DEFAULT NULL,
+    `main_image` varchar(1024) DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
