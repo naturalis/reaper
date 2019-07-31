@@ -123,6 +123,7 @@ CREATE TABLE `topstukken` (
   `expedition` varchar(100) DEFAULT NULL,
   `collector` varchar(100) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `scientificName` (`scientificName`)
