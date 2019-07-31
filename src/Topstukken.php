@@ -96,6 +96,8 @@ class Topstukken extends AbstractClass
         $data['title'] = $title;
         $data['description'] = json_encode($description);
         $data['url'] = $this->objectUrl;
+        $data['image'] = rtrim($this->url, '/') . $object->specimen->image->srcSet->{'1920'};
+
         if ($this->pdo->insertRow(self::TABLE, $data)) {
             $this->imported++;
             $this->logger->log("Inserted data for '" . $data['registrationNumber'] . "'");
