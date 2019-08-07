@@ -122,7 +122,7 @@ class Ttik extends AbstractClass
                 $this->taxa[$id]['synonyms'] = json_encode($synonyms);
             // Common names in Dutch or English
             } else if (in_array($name->language, ['English', 'Dutch'])) {
-                $common[] = ['name' => $name->name, 'nametype' => $name->nametype];
+                $common[] = ['name' => $name->name, 'nametype' => $name->nametype, 'remark' => $name->remark ];
                 if (!empty($this->taxa[$id][strtolower($name->language)])) {
                     $common = array_merge(json_decode($this->taxa[$id][strtolower($name->language)]), $common);
                 }
