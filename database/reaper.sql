@@ -149,6 +149,7 @@ CREATE TABLE `ttik` (
   `english` text DEFAULT NULL,
   `dutch` text DEFAULT NULL,
   `synonyms` text DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
   `taxon_id` int(11) unsigned NOT NULL,
   `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
