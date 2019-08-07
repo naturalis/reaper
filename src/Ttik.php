@@ -88,12 +88,6 @@ class Ttik extends AbstractClass
             exit();
         }
         $data = json_decode($this->curl->response);
-
-        $data = array_map(function ($a) {
-            unset($a->remark);
-            return $a;
-        }, $data);
-
         $this->names = $data->names;
     }
 
