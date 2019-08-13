@@ -21,9 +21,9 @@ if (!isset($opt["source"]))
 
 switch ($opt["source"])
 {
-    case "crs":
-        $import = new Crs();
-        break;
+    // case "crs":
+    //     $import = new Crs();
+    //     break;
 
     case "tentoonstelling":
         $import = new Tentoonstelling();
