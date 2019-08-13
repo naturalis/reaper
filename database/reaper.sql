@@ -234,6 +234,19 @@ CREATE TABLE `taxa_no_objects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
+DROP TABLE IF EXISTS `maps`;
+
+CREATE TABLE `maps` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `taxon` varchar(50) DEFAULT NULL,
+    `url` varchar(1024) DEFAULT NULL,
+    `text_dutch` text DEFAULT NULL,
+    `text_english` text DEFAULT NULL,
+    `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
