@@ -205,8 +205,8 @@ DROP TABLE IF EXISTS `taxonlist`;
 CREATE TABLE `taxonlist` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `taxon` varchar(50) DEFAULT NULL,
-    `taxonomy` text DEFAULT NULL,
     `collection` varchar(64) DEFAULT NULL,
+    `synonyms` text DEFAULT NULL,
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `collection` (`collection`)
