@@ -37,9 +37,9 @@ switch ($opt["source"])
         $import = new Ttik();
         break;
 
-    case "iucn":
-        $import = new Iucn();
-        break;
+    // case "iucn":
+    //     $import = new Iucn();
+    //     break;
 
     case "natuurwijzer":
         $import = new Natuurwijzer();
