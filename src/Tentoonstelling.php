@@ -32,6 +32,12 @@ class Tentoonstelling extends AbstractClass
         }
 
         $this->csvPath = $this->setPath($this->basePath) . $this->csvFile;
+
+        if (!file_exists($this->csvPath))
+        {
+            $this->logger->log(sprintf("csv file %s not found",$this->csvPath),1);
+            exit();
+        }
     }
 
     public function __destruct ()
