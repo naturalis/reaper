@@ -242,6 +242,7 @@ CREATE TABLE `maps` (
     `url` varchar(1024) DEFAULT NULL,
     `text_dutch` text DEFAULT NULL,
     `text_english` text DEFAULT NULL,
+    `citation` varchar(4000) DEFAULT NULL,           
     `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
