@@ -138,7 +138,6 @@ DROP TABLE IF EXISTS `ttik`;
 
 CREATE TABLE `ttik` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `description` text,
   `classification` text,
   `uninomial` varchar(255) DEFAULT NULL,
   `specific_epithet` varchar(255) DEFAULT NULL,
@@ -161,13 +160,12 @@ DROP TABLE IF EXISTS `ttik_translations`;
 
 CREATE TABLE `ttik_translations` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ttik_id` int(11) NOT NULL,
   `language_code` varchar(2) DEFAULT 'nl',
   `description` text,
   `taxon_id` int(11) unsigned NOT NULL,
   `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `ttik_language` (`ttik_id`,`language_code`)
+  KEY `ttik_language` (`language_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;                
                 
                 

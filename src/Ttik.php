@@ -18,6 +18,7 @@ class Ttik extends AbstractClass
     private $currentTaxonId;
 
     const TABLE = 'ttik';
+    const TABLE_TRANSLATIONS = 'ttik_translations';
 
     public function __construct ()
     {
@@ -38,8 +39,10 @@ class Ttik extends AbstractClass
     public function import ()
     {
         $this->emptyTable(self::TABLE);
+        $this->emptyTable(self::TABLE_TRANSLATIONS);
         $this->setTotal();
         $this->logger->log("Retrieving data for " . $this->total . " scientific and common names");
+
         // Fetch in batches
         for ($this->offset = 0; $this->offset < $this->total; $this->offset += $this->rows) {
             $this->setNames();
@@ -64,9 +67,36 @@ class Ttik extends AbstractClass
             if ($key === key($this->taxa) && !$all) {
                 break;
             }
-            if ($this->pdo->insertRow(self::TABLE, $taxon)) {
+
+            $these_descriptions = $taxon['description'];
+            unset($taxon['description']);
+
+            if ($this->pdo->insertRow(self::TABLE, $taxon))
+            {
+
                 $this->imported++;
                 $this->logger->log("Inserted data for '$scientificName'");
+
+                foreach ($these_descriptions as $lang => $this_description)
+                {
+                    if (empty($this_description))
+                    {
+                        continue;
+                    }
+
+                    if ($this->pdo->insertRow(self::TABLE_TRANSLATIONS, [
+                        "taxon_id" => $taxon['taxon_id'],
+                        "language_code" => $lang,
+                        "description" => json_encode($this_description)
+                    ]))
+                    {
+                        $this->logger->log("Inserted '$lang' description for '$scientificName'");
+                    }
+                    else
+                    {
+                        $this->logger->log("Could not insert '$lang' description for '$scientificName'");
+                    }
+                }
                 unset($this->taxa[$key]);
             } else {
                 $this->logger->log("Could not insert data for '$scientificName'", 1);
@@ -152,7 +182,7 @@ class Ttik extends AbstractClass
         return $name;
     }
 
-    private function setTotal ()
+    private function setTotal()
     {
         if ($this->total == 0) {
             $this->curl->get($this->url, [
@@ -169,20 +199,30 @@ class Ttik extends AbstractClass
 
     private function getTaxonDescription ($taxonId)
     {
-        $description = [];
-        foreach ([1, 4, 5] as $cat) {
-            $url = $this->setPath($this->config->getEnv('REAPER_URL_TTIK')) . 'taxon_page.php';
-            $this->curl->get($url, [
-                'pid' => $this->pid,
-                'taxon' => $taxonId,
-                'cat' => $cat,
-            ]);
-            $data = json_decode($this->curl->response);
-            if (!empty($data->page->body)) {
-                $description[] = [ "title" => $data->page->title, "body" => $data->page->body];
+        $description=[];
+
+        foreach (['nl', 'en'] as $lang)
+        {
+            $description[$lang]=[];
+            foreach ([1, 4, 5] as $cat)
+            {
+                $url = $this->setPath($this->config->getEnv('REAPER_URL_TTIK')) . 'taxon_page.php';
+                $this->curl->get($url, [
+                    'pid' => $this->pid,
+                    'taxon' => $taxonId,
+                    'cat' => $cat,
+                    'lang' => ($lang=='en' ? '26' : '24')
+                ]);
+                $data = json_decode($this->curl->response);
+                if (!empty($data->page->body)) {
+                    $description[$lang][] = [
+                        "title" => $data->page->title, 
+                        "body" => $data->page->body
+                    ];
+                }
             }
         }
-        return json_encode($description);
+        return $description;
     }
 
     private function getTaxonClassification ($taxonId)
