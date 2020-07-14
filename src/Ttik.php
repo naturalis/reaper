@@ -87,8 +87,7 @@ class Ttik extends AbstractClass
                     if ($this->pdo->insertRow(self::TABLE_TRANSLATIONS, [
                         "taxon_id" => $taxon['taxon_id'],
                         "language_code" => $lang,
-                        "description" => json_encode($this_description),
-                        "verified" => "1"
+                        "description" => json_encode($this_description)
                     ]))
                     {
                         $this->logger->log("Inserted '$lang' description for '$scientificName'");
@@ -217,18 +216,11 @@ class Ttik extends AbstractClass
                 $data = json_decode($this->curl->response);
                 if (!empty($data->page->body))
                 {
-                    if ($data->page->publish=='1')
-                    {
-                        $description[$lang][] = [
-                            "title" => $data->page->title, 
-                            "body" => $data->page->body
-                        ];
-                    }
-                    else
-                    {
-                        
-                    }
-
+                    $description[$lang][] = [
+                        "title" => $data->page->title, 
+                        "body" => $data->page->body,
+                        "verified" => empty($data->page->publish) ? "0" : $data->page->publish
+                    ];
                 }
             }
         }
