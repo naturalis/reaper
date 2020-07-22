@@ -131,6 +131,22 @@ CREATE TABLE `topstukken` (
 
 
 
+DROP TABLE IF EXISTS `topstukken_translations`;
+
+CREATE TABLE `topstukken_translations` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `scientificName` varchar(100) DEFAULT NULL,
+  `language_code` varchar(2) DEFAULT 'nl',
+  `title` varchar(100) DEFAULT NULL,
+  `description` text,
+  `verified` int(1) unsigned NOT NULL DEFAULT 0,
+  `inserted` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `scientificName_languageCode` (`scientificName`, `language_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table ttik
 # ------------------------------------------------------------
 
