@@ -11,6 +11,19 @@ class Topstukken extends AbstractClass
     private $objectUrl;
     private $curl;
     private $objects = [];
+    private $table_columns = [
+        'description',
+        'title',
+        'registrationNumber',
+        'collection',
+        'country',
+        'scientificName',
+        'year',
+        'expedition',
+        'collector',
+        'url',
+        'image',
+    ];
 
     const TABLE = 'topstukken';
 
@@ -97,6 +110,18 @@ class Topstukken extends AbstractClass
         $data['description'] = json_encode($description);
         $data['url'] = $this->objectUrl;
         $data['image'] = rtrim($this->url, '/') . $object->specimen->image->srcSet->{'1920'};
+
+        // however, i'd rather have a less literal insert statement
+        $strict_data=[];
+        foreach ($data as $key => $val)
+        {
+            if (in_array($key, $this->table_columns))
+            {
+                $strict_data[$key]=$val;
+            }
+        }
+
+        $data = $strict_data;
 
         if ($this->pdo->insertRow(self::TABLE, $data)) {
             $this->imported++;
